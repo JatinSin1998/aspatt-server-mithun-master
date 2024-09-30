@@ -18,6 +18,7 @@ import {
   staffList,
   getFeedbacks,
   generateStats,
+  docStatusChange,
 } from "../controllers/admin.js";
 import {
   bookAppointment,
@@ -47,7 +48,7 @@ router.post("/auth/refresh", generateRefreshToken);
 router.delete("/auth/logout", logout);
 
 // -------------------> Admin <--------------------------
-
+// for find user Details By Uuid save in database
 router.post("/users/finduser", middleware, (req, res) => {
   finduser(req, res);
 });
@@ -66,6 +67,10 @@ router.delete("/users/unverified/reject", middleware, (req, res) => {
 
 router.get("/users/doctors", middleware, (req, res) => {
   docList(req, res);
+});
+
+router.patch("/users/doctors_status", middleware, (req, res) => {
+  docStatusChange(req, res);
 });
 
 router.get("/users/staffs", middleware, (req, res) => {

@@ -42,6 +42,23 @@ const authSchema = new mongoose.Schema({
     required: true,
     default: () => nanoid(),
   },
+  status: {
+    type: String,
+    default: null, // Initially null
+    enum: ["active", "deactive"],
+  },
+});
+
+// Pre-update hook to set status for doctors when updating userType
+authSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+
+  if (update.userType === "Doctor") {
+    // Update the status based on userType being "Doctor"
+    update.status = "active"; // or "reject" based on your condition
+  }
+
+  next();
 });
 
 authSchema.methods = {

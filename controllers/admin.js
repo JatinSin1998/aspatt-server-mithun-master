@@ -47,11 +47,14 @@ const unverified = async (req, res) => {
 
 const verify = async (req, res) => {
   try {
-    const { uid, workDays, time, department, speciality, fee } = req.body;
+    const { uid, workDays, time, department, speciality, fee, userType } =
+      req.body;
     const verifiedUser = await auth.findOneAndUpdate(
       { uid },
-      { verified: true, workDays, time, department, speciality, fee }
+      { verified: true, userType, workDays, time, department, speciality, fee }
     );
+    console.log(verifiedUser, "verifiedUserverifiedUser");
+
     if (verifiedUser) {
       return res
         .status(200)
@@ -110,6 +113,39 @@ const docList = async (req, res) => {
     return res
       .status(500)
       .json({ error: true, errorMsg: "Internal Server Error!" });
+  }
+};
+
+// -----------> Change the Status of Doctors (Active and InActive) <--------------------------
+
+const docStatusChange = async (req, res) => {
+  const { status, uid } = req.body;
+
+  try {
+    // Find the user by their UID
+    const user = await auth.findOne({ uid });
+
+    // If the user doesn't exist
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the status is valid (only 'active' or 'deactive')
+    if (!["active", "deactive"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    // Update the status for the doctor
+    user.status = status;
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Status updated successfully", user });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -236,4 +272,5 @@ export {
   staffList,
   getFeedbacks,
   generateStats,
+  docStatusChange,
 };
