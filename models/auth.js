@@ -44,7 +44,7 @@ const authSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: null, // Initially null
+    default: "deactive", // Initially null
     enum: ["active", "deactive"],
   },
 });
