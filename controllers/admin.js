@@ -116,6 +116,29 @@ const docList = async (req, res) => {
   }
 };
 
+const docActiveList = async (req, res) => {
+  try {
+    const doctors = await auth.find(
+      { userType: "Doctor", verified: true, status: "active" },
+      "-password -verified"
+    );
+    console.log(doctors, "doctorsdoctorsdoctors");
+
+    if (doctors.length > 0) {
+      return res.status(200).json(doctors);
+    } else {
+      return res
+        .status(404)
+        .json({ error: true, errorMsg: "No doctor User found!" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: true, errorMsg: "Internal Server Error!" });
+  }
+};
+
 // -----------> Change the Status of Doctors (Active and InActive) <--------------------------
 
 const docStatusChange = async (req, res) => {
@@ -273,4 +296,5 @@ export {
   getFeedbacks,
   generateStats,
   docStatusChange,
+  docActiveList,
 };

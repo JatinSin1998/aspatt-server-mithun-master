@@ -19,6 +19,7 @@ import {
   getFeedbacks,
   generateStats,
   docStatusChange,
+  docActiveList,
 } from "../controllers/admin.js";
 import {
   bookAppointment,
@@ -67,6 +68,10 @@ router.delete("/users/unverified/reject", middleware, (req, res) => {
 
 router.get("/users/doctors", middleware, (req, res) => {
   docList(req, res);
+});
+// Public api
+router.get("/users/doctors_active", (req, res) => {
+  docActiveList(req, res);
 });
 
 router.patch("/users/doctors_status", middleware, (req, res) => {
